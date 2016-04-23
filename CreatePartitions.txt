@@ -1,0 +1,33 @@
+rem Partiziona automaticamente il disco di destinazione
+rem dell'installazione di Windows 10 Home in modo UEFI/GPT.
+
+rem Consigliato per Mediacom SmartPad 8.0 HD iPro W810 (16GB).
+
+rem Configurazione desunta da Mediacom WinPad 7.
+
+rem Invocare dal prompt del DVD di installazione (MAIUSC+F10) con:
+rem    DiskPart /s D:\CreatePartitions.txt
+
+select disk 0
+clean
+convert gpt
+rem === 1. Partizione di sistema EFI =====
+create partition efi size=100
+format quick fs=fat32 label="System"
+assign letter="S"
+
+rem === 2. Partizione di Windows =====
+create partition primary
+shrink minimum=400
+format quick fs=ntfs label="Windows"
+assign letter="W"
+
+rem === 3. Partizione di Windows RE =====
+create partition primary
+format quick fs=ntfs label="Windows RE tools"
+assign letter="T"
+set id="de94bba4-06d1-4d40-a16a-bfd50179d6ac"
+gpt attributes=0x8000000000000001
+
+list volume
+exit
