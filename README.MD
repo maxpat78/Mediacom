@@ -1,7 +1,7 @@
 AGGIORNAMENTO A WINDOWS 10 SU TABLET DA 16GB
 ============================================
 
-1) Eseguire il backup del sistema da aggiornare
+# 1) Eseguire il backup del sistema da aggiornare
 
 È consigliabile salvare su hard disk USB o altrove un'immagine del disco di
 sistema del tablet (con Macrium Free, Clonezilla, Norton Ghost o altro
@@ -9,7 +9,9 @@ strumento) in modo da poter ripristinare Windows 8.1 in caso di problemi con
 l'aggiornamento.
 
 Facoltativamente, conservare un backup della chiave del registro di sistema:
+
     HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation
+
 e della cartella C:\Windows\OEM, per poi ripristinarle nel nuovo sistema.
 
 Con un'utilità quale ProduKey di NIRSoft annotare inoltre il codice product
@@ -17,13 +19,13 @@ key di Windows 8.1 (dovrebbe comunque essere memorizzato nel firmware della
 macchina).
 
 
-2) Preparare il disco di installazione
+# 2) Preparare il disco di installazione
 
-N.B. MEDIACOM: a differenza del più recente WinPad 7" W700, il firmware UEFI
+* N.B. MEDIACOM: a differenza del più recente WinPad 7" W700, il firmware UEFI
 dello SmartPad 8.0 HD iPro W810 sembra in grado di riconoscere una chiavetta
 USB o scheda SD come disco di avvio solo se partizionata in GPT e contenente
 il bootloader EFI in una partizione avente GUID di tipo EFI SYSTEM, formattata
-in FAT32. NON BASTA USARE TOOL OPEN-SOURCE COME RUFUS!
+in FAT32. NON BASTA USARE TOOL OPEN-SOURCE COME RUFUS! *
 
 Può essere preparata da un Prompt dei comandi amministrativo con DiskPart:
 
@@ -42,7 +44,7 @@ A questo punto basta copiare nella chiavetta/scheda il contenuto del DVD di
 installazione di Windows 10 e usarla per l'avvio del tablet.
 
 
-3) Backup dei driver OEM del tablet
+# 3) Backup dei driver OEM del tablet
 
 È necessario effettuare il backup dei driver OEM specifici per il tablet,
 affinché il nuovo sistema appena installato riconosca e configuri correttamente
@@ -55,7 +57,7 @@ amministrativo e impartire:
     Dism /Online /Export-Driver /Destination:"D:\Drivers"
 ```
 
-4) Avviare il tablet dal disco di installazione
+# 4) Avviare il tablet dal disco di installazione
 
 Occorre premunirsi di un hub USB autoalimentato al quale collegare la chiavetta
 (o la scheda SD in apposito lettore) USB e una tastiera e, eventualmente, anche
@@ -72,11 +74,11 @@ usare come disco di avvio e premere INVIO.
 Va sottolineato che alcuni tablet sono in grado di alimentare una tastiera e
 una chiavetta senza altre fonti di energia.
 
-PER INSTALLARE WINDOWS 10 IN ASSENZA DI TASTIERA, VEDERE LA NOTA "INSTALLARE
-SENZA TASTIERA.TXT".
+** PER INSTALLARE WINDOWS 10 IN ASSENZA DI TASTIERA, VEDERE LA NOTA "INSTALLARE
+SENZA TASTIERA.TXT" **
 
 
-5) Partizionare il disco di sistema
+# 5) Partizionare il disco di sistema
 
 UN MERO AGGIORNAMENTO DI WINDOWS 8.1 NON SARA' VEROSIMILMENTE MAI RESO
 POSSIBILE DA MEDIACOM in quanto il disco da 16 GB è insufficiente a
