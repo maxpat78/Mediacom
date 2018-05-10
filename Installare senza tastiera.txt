@@ -1,0 +1,77 @@
+INSTALLAZIONE SENZA TASTIERA
+============================
+
+In mancanza di una tastiera USB o di un hub alimentato è possibile installare
+egualmente Windows 10 modificando il file BOOT.WIM nella chiavetta di avvio.
+
+Il sistema operativo, modificato con le comuni utilità incluse in Windows 8 e
+seguenti, richiama uno script personalizzato che partiziona il disco e applica
+l'immagine di Windows SENZA INTERVENTO DELL'UTENTE.
+
+
+1) Montare l'immagine di Windows contenuta in BOOT.WIM
+Aprire un Prompt dei comandi con i privilegi di Amministratore, creare una
+directory temporanea con
+
+    MD TMP
+
+e applicarvi l'immagine di BOOT.WIM con:
+
+    DISM /Mount-Wim /WimFile:D:\sources\BOOT.WIM /Index:1 /MountDir:tmp
+
+assumendo che il disco di installazione di Windows sia D:.
+
+
+2) Assegnare l'utente corrente alla cartella tmp come proprietario
+Per apportare le modifiche descritte di seguito occorre cambiare proprietario
+alla cartella tmp dalla scheda Proprietà in Esplora risorse e impostare come
+tale l'utente connesso.
+
+
+3) Creare un file WINPESHL.INI personalizzato in tmp\windows\system32
+Tale file istruisce WINPESHL.EXE ad avviare una shell personalizzata al posto
+di SETUP.EXE. Basta inserire due righe, che lo istruiscano a lanciare un file
+batch con i comandi che ci interessano:
+
+    [LaunchApp]
+    AppPath = %COMSPEC% /K %WINDIR%\system32\winpeshl.bat
+
+Nel file WINPESHL.BAT saranno inseriti i comandi utili a partizionare il
+disco e a installare Windows 10 senza intervento dell'utente, tipo(*):
+
+    @echo off
+    echo L'installazione di Windows 10 sul tablet elimina ogni contenuto sul disco:
+    echo spegnere il tablet entro 15 secondi per interrompere.
+    ping 127.0.0.1 -n 15 >NUL
+    echo PASSO 1. CREAZIONE DELLE NUOVE PARTIZIONI
+    diskpart /s D:\CreatePartitions.txt
+    echo PASSO 2. APPLICAZIONE DI WINDOWS 10
+    D:\ApplyImage.bat
+    echo Installazione completata. Attendere il riavvio.
+    ping 127.0.0.1 -n 5 >NUL
+    wpeutil reboot
+
+(*) NOTA: poiché TIMEOUT.EXE non fa parte dell'immagine di avvio, se lo si vuole
+va copiato dal sistema un uso o da INSTALL.WIM. PING raggiunge il medesimo scopo.
+
+
+4) Applicare le modifiche a BOOT.WIM
+Una volta concluse le modifiche all'immagine di avvio dell'installazione di
+Windows 10 occorre registrarle con
+
+    DISM /Unmount-Wim /MountDir:tmp /Commit
+
+e quindi copiare il file BOOT.WIM sulla chiavetta di avvio dell'installazione.
+
+
+5) Avviare il tablet dal disco di installazione
+Accendere il tablet tenendo premuto, oltre al tasto di alimentazione, anche il
+tasto VOLUME +.
+
+Apparirà in breve il menù UEFI con 6 icone: i tasti VOLUME +/- potranno essere
+usati per spostarsi di voce in voce e il tasto di alimentazione per fare click
+e sceglierne una.
+
+Scegliere dunque la seconda icona (Boot Manager) e infine, dall'elenco
+"EFI Boot Devices", scegliere la chiavetta/scheda SD da usare come disco di
+avvio.
